@@ -1,0 +1,7 @@
+@{ Layout = "_Layout"; ViewData["Title"] = "Index"; }
+
+<form method="POST" asp-controller="Home" asp-action="AddNote" class="form form-inline">
+	@Html.AntiForgeryToken()
+	<input type="text" name="value" class="form-control" autofocus>
+	<input type="submit" value="Add note" class="btn btn-primary" />
+</form>
