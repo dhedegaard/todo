@@ -5,8 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using todo.Models;
 
 namespace todo
 {
@@ -17,6 +21,14 @@ namespace todo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            services.AddEntityFramework()
+                .AddEntityFrameworkSqlite()
+                .AddDbContext<TodoContext>(options => options.UseSqlite("Filename=database.sqlite"));
+
+            // services.AddIdentity<ApplicationUser, IdentityRole>()
+            // .AddEntityFrameworkStores<ApplicationDbContext>()
+            //.AddDefaultTokenProviders();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -30,7 +42,7 @@ namespace todo
             }
 
             app.UseStaticFiles();
-
+            // app.UseIdentity();
             app.UseMvcWithDefaultRoute();
         }
     }
