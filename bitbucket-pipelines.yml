@@ -1,0 +1,8 @@
+image: microsoft/dotnet:onbuild
+
+pipelines:
+  default:
+    - step:
+        script:
+          - dotnet restore
+          - dotnet build
