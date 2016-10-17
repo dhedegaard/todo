@@ -6,3 +6,4 @@ pipelines:
         script:
           - dotnet restore
           - dotnet build
+          - dotnet ef database update
