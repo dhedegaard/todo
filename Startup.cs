@@ -24,11 +24,11 @@ namespace todo
 
             services.AddEntityFramework()
                 .AddEntityFrameworkSqlite()
-                .AddDbContext<TodoContext>(options => options.UseSqlite("Filename=database.sqlite"));
+                .AddDbContext<ModelContext>(options => options.UseSqlite("Filename=database.sqlite"));
 
-            // services.AddIdentity<ApplicationUser, IdentityRole>()
-            // .AddEntityFrameworkStores<ApplicationDbContext>()
-            //.AddDefaultTokenProviders();
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ModelContext>()
+                .AddDefaultTokenProviders();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

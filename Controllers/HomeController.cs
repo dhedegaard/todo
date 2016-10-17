@@ -8,9 +8,9 @@ namespace todo
 {
     public class HomeController : Controller
     {
-        private TodoContext _context;
+        private readonly ModelContext _context;
 
-        public HomeController(TodoContext context)
+        public HomeController(ModelContext context)
         {
             _context = context;
         }
@@ -39,7 +39,7 @@ namespace todo
         }
 
         [HttpPost]
-        [Route("{id:int}", Name = "RemoveTodo")]
+        [Route("/todos/remove/{id:int}", Name = "RemoveTodo")]
         public IActionResult RemoveNote(int id)
         {
             var todo = _context.Todos

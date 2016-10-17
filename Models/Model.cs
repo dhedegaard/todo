@@ -1,11 +1,13 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace todo.Models
 {
-    public class TodoContext : DbContext
+    public class ModelContext : IdentityDbContext<ApplicationUser>
     {
-        public TodoContext(DbContextOptions<TodoContext> options) : base(options) { }
+        public ModelContext(DbContextOptions<ModelContext> options) : base(options) { }
         public DbSet<Todo> Todos { get; set; }
     }
 
@@ -15,5 +17,10 @@ namespace todo.Models
         [Required]
         [MinLengthAttribute(10)]
         public string value { get; set; }
+    }
+
+    public class ApplicationUser : IdentityUser
+    {
+        public List<Todo> Todos { get; set; }
     }
 }
