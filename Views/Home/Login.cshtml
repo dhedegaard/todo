@@ -1,0 +1,11 @@
+@{
+	Layout = "_Layout";
+	ViewData["Title"] = "Index";
+}
+
+<form method="POST" asp-controller="Home" asp-action="Login">
+	@Html.AntiForgeryToken()
+    <input type="text" name="username" />
+    <input type="password" name="password" />
+    <input type="submit" value="login" />
+</form>
