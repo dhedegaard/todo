@@ -2,23 +2,25 @@
 	Layout = "_Layout";
 	ViewData["Title"] = "Index";
 }
-@using todo.Models
-@model IEnumerable<Todo>
+@model todo.ViewModels.IndexViewModel
 
-<form method="POST" asp-controller="Home" asp-action="AddNote" class="form form-inline">
-	@Html.AntiForgeryToken()
-	<input name="value" type="text" class="form-control">
-	<input type="submit" value="Add note" class="btn btn-primary" />
+<form method="POST" asp-controller="Home" asp-action="Index" class="form form-inline">
+	<label asp-for="NewTodo">
+		<input asp-for="NewTodo" class="form-control" autofocus />
+	</label>
+	<input type="submit" value="Add note" class="btn btn-primary" /><br />
+	<span asp-validation-for="NewTodo" class="text-danger"></span>
 </form>
 
 <hr />
 
-@foreach (var todo in Model) {
+@foreach (var todo in Model.ExistingTodos) {
 	<div class="alert alert-info">
 		<div class="pull-right">
-			<form method="POST" action="@Url.RouteUrl("RemoveTodo", new { id = todo.ID })" class="form form-inline">
-				@Html.AntiForgeryToken()
-				<input type="submit" value="delete" class="btn btn-sm btn-danger" />
+			<form method="POST" asp-controller="Home" asp-action="RemoveNote" asp-route-id="@todo.ID" class="form form-inline">
+				<button type="submit" class="btn btn-sm btn-danger">
+					<i class="glyphicon glyphicon-trash"></i>
+				</button>
 			</form>
 		</div>
 		@todo.value

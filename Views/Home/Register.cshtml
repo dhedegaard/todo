@@ -1,0 +1,19 @@
+@{
+	Layout = "_Layout";
+	ViewData["Title"] = "Register";
+}
+@model todo.ViewModels.RegisterUser
+
+<form method="POST" asp-controller="Home" asp-action="Register">
+	@Html.AntiForgeryToken()
+    <label asp-for="@Model.Username">
+        <input asp-for="Username" />
+    </label><br />
+    <label asp-for="Password">
+        <input asp-for="Password" />
+    </label><br />
+    <label asp-for="Password2">
+        <input asp-for="Password2" />
+    </label><br />
+    <input type="submit" value="Register" />
+</form>

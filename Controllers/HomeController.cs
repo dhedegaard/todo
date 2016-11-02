@@ -14,6 +14,7 @@ namespace todo
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ModelContext _context;
+
         public HomeController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
@@ -25,41 +26,50 @@ namespace todo
         }
         public IActionResult Index()
         {
-            ViewData["todos"] = _context.Todos.ToList();
-            return View(_context.Todos.ToList());
+            return View(new IndexViewModel
+            {
+                ExistingTodos = _context.Todos.ToList(),
+            });
         }
 
         [HttpPost]
         [ValidateAntiForgeryTokenAttribute]
-        public IActionResult AddNote([FromForm] string value)
+        public IActionResult Index(IndexViewModel model)
         {
-            if (!ModelState.IsValid || string.IsNullOrEmpty(value))
-            {
-                return BadRequest("Bad request");
+            if (ModelState.IsValid) {
+                if (_context.Todos.FirstOrDefault(e => e.value == model.NewTodo) != null) {
+                    ModelState.AddModelError(nameof(model.NewTodo), "An existing todo element has the same name.");
+                }
             }
-
-            var todo = new Todo
+            if (ModelState.IsValid)
             {
-                value = value
-            };
-            _context.Todos.Add(todo);
-            _context.SaveChanges();
-            return Redirect("/");
+                _context.Todos.Add(new Todo
+                {
+                    value = model.NewTodo,
+                });
+                _context.SaveChanges();
+                return RedirectToAction(nameof(HomeController.Index));
+            }
+            if (model.ExistingTodos == null)
+            {
+                model.ExistingTodos = _context.Todos.ToList();
+            }
+            return View(model);
         }
 
         [HttpPost]
-        [Route("/todos/remove/{id:int}", Name = "RemoveTodo")]
-        public IActionResult RemoveNote(int id)
+        public IActionResult RemoveNote([FromRoute] int id)
         {
             var todo = _context.Todos
                 .FirstOrDefault(e => e.ID == id);
             if (todo == null)
             {
-                return BadRequest($"Todo object with ID {id} does not exist");
+                // Already deleted or never existed.
+                return NotFound();
             }
             _context.Remove(todo);
             _context.SaveChanges();
-            return Redirect("/");
+            return RedirectToAction(nameof(HomeController.Index));
         }
 
         [AllowAnonymous]
@@ -67,12 +77,28 @@ namespace todo
         {
             if (Request.Method == "POST" && ModelState.IsValid)
             {
-                var user = new ApplicationUser{UserName = username};
+                var user = new ApplicationUser { UserName = username };
                 await _signInManager.SignInAsync(user, isPersistent: true);
                 return RedirectToAction(nameof(HomeController.Index), "Index");
                 throw new Exception(username + " - " + password);
             }
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View(new RegisterUser());
+        }
+
+        [HttpPost]
+        public IActionResult Register(RegisterUser registerUser)
+        {
+            if (ModelState.IsValid)
+            {
+                throw new Exception(registerUser.ToString());
+            }
+            return View(registerUser);
         }
     }
 }
