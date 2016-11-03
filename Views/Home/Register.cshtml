@@ -10,9 +10,9 @@
             <label asp-for="Username"></label>
         </div>
         <div class="col-sm-4">
-            <input asp-for="Username" class="form-control" />
+            <input asp-for="Username" class="form-control" autofocus />
         </div>
-        <span asp-validation-for="Username" class="text-danger"></span>
+        <span asp-validation-for="Username" class="col-sm-4 text-danger"></span>
     </div>
     <div class="form-group">
         <div class="col-sm-2">
@@ -21,7 +21,7 @@
         <div class="col-sm-4">
             <input asp-for="Password" class="form-control" />
         </div>
-        <span asp-validation-for="Password" class="text-danger"></span>
+        <span asp-validation-for="Password" class="col-sm-4 text-danger"></span>
     </div>
     <div class="form-group">
         <div class="col-sm-2">
@@ -30,8 +30,9 @@
         <div class="col-sm-4">
             <input asp-for="Password2" class="form-control" />
         </div>
-        <span asp-validation-for="Password2" class="text-danger"></span>
+        <span asp-validation-for="Password2" class="col-sm-4 text-danger"></span>
     </div>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="form-row">
         <div class="col-sm-offset-2 col-sm-4">
             <input type="submit" value="Register" class="btn btn-primary" />
