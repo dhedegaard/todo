@@ -56,7 +56,7 @@ namespace todo
             }
 
             app.UseStaticFiles();
-            // app.UseIdentity();
+            app.UseIdentity();
             app.UseMvcWithDefaultRoute();
         }
     }
