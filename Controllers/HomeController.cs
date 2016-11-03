@@ -74,21 +74,34 @@ namespace todo
             return RedirectToAction(nameof(HomeController.Index));
         }
 
-        [AllowAnonymous]
-        public async Task<IActionResult> Login([FromForm] string username, [FromForm] string password)
+        [HttpGet]
+        public IActionResult Login()
         {
-            if (Request.Method == "POST" && ModelState.IsValid)
+            return View(new LoginUser());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginUser model)
+        {
+            var user = new ApplicationUser();
+            if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = username };
-                await _signInManager.SignInAsync(user, isPersistent: true);
-                return RedirectToAction(nameof(HomeController.Index), "Index");
-                throw new Exception(username + " - " + password);
+                user.UserName = model.Username;
+                if (!await _userManager.CheckPasswordAsync(user, model.Password))
+                {
+                    ModelState.AddModelError("Password", "Username and password does not match");
+                }
             }
-            return View();
+            if (ModelState.IsValid)
+            {
+                await _signInManager.SignInAsync(user, true);
+                return RedirectToAction(nameof(HomeController.Index));
+            }
+            return View(model);
         }
 
         [HttpGet]
-        public IActionResult Register()
+        public IActionResult Register(LoginUser model)
         {
             return View(new RegisterUser());
         }
@@ -112,14 +125,13 @@ namespace todo
             {
                 var user = new ApplicationUser { UserName = registerUser.Username };
                 var result = await _userManager.CreateAsync(user, registerUser.Password);
-                if (result.Succeeded) {
+                if (result.Succeeded)
+                {
                     await _signInManager.SignInAsync(user, true);
                     return RedirectToAction(nameof(HomeController.Index));
                 }
                 // Dangerous ? =)
-                foreach (var error in result.Errors) {
-                    ModelState.AddModelError("Username", error.ToString());
-                }
+                ModelState.AddModelError("Username", result.Errors.First().Code);
             }
             return View(registerUser);
         }
