@@ -36,8 +36,10 @@ namespace todo
         [ValidateAntiForgeryTokenAttribute]
         public IActionResult Index(IndexViewModel model)
         {
-            if (ModelState.IsValid) {
-                if (_context.Todos.FirstOrDefault(e => e.value == model.NewTodo) != null) {
+            if (ModelState.IsValid)
+            {
+                if (_context.Todos.FirstOrDefault(e => e.value == model.NewTodo) != null)
+                {
                     ModelState.AddModelError(nameof(model.NewTodo), "An existing todo element has the same name.");
                 }
             }
@@ -92,11 +94,32 @@ namespace todo
         }
 
         [HttpPost]
-        public IActionResult Register(RegisterUser registerUser)
+        public async Task<IActionResult> Register(RegisterUser registerUser)
         {
             if (ModelState.IsValid)
             {
-                throw new Exception(registerUser.ToString());
+                if (_context.Users.SingleOrDefault(
+                    e => e.UserName.ToLower() == registerUser.Username.ToLower()) != null)
+                {
+                    ModelState.AddModelError("Username", "Username already exists, pick another one.");
+                }
+                if (registerUser.Password != registerUser.Password2)
+                {
+                    ModelState.AddModelError("Password", "The passwords are not equal.");
+                }
+            }
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser { UserName = registerUser.Username };
+                var result = await _userManager.CreateAsync(user, registerUser.Password);
+                if (result.Succeeded) {
+                    await _signInManager.SignInAsync(user, true);
+                    return RedirectToAction(nameof(HomeController.Index));
+                }
+                // Dangerous ? =)
+                foreach (var error in result.Errors) {
+                    ModelState.AddModelError("Username", error.ToString());
+                }
             }
             return View(registerUser);
         }
