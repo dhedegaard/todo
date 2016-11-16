@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -36,6 +37,7 @@ namespace todo
         [ValidateAntiForgeryTokenAttribute]
         public IActionResult Index(IndexViewModel model)
         {
+            var loggedIn = _signInManager.IsSignedIn(User);
             if (ModelState.IsValid)
             {
                 if (_context.Todos.FirstOrDefault(e => e.value == model.NewTodo) != null)
@@ -83,11 +85,10 @@ namespace todo
         [HttpPost]
         public async Task<IActionResult> Login(LoginUser model)
         {
-            var user = new ApplicationUser();
             if (ModelState.IsValid)
             {
-                user.UserName = model.Username;
-                if (!await _userManager.CheckPasswordAsync(user, model.Password))
+                var user = _userManager.Users.SingleOrDefault(u => u.UserName.ToLower() == model.Username.ToLower());
+                if (user != null && !await _userManager.CheckPasswordAsync(user, model.Password))
                 {
                     ModelState.AddModelError(string.Empty, "Username and password does not match");
                     return View(model);
@@ -131,6 +132,13 @@ namespace todo
                 ModelState.AddModelError("Username", result.Errors.First().Code);
             }
             return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Logout() {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction(nameof(HomeController.Index));
         }
     }
 }

@@ -1,3 +1,5 @@
+@using System.Security.Principal
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,8 +13,15 @@
 <body>
 	<div class="container">
 		<div class="pull-right">
-			<a asp-controller="Home" asp-action="Register">Register</a>
-			<a asp-controller="Home" asp-action="Login">Login</a>
+			@if (!User.Identity.IsAuthenticated) {
+				<a asp-controller="Home" asp-action="Register">Register</a>
+				<a asp-controller="Home" asp-action="Login">Login</a>
+			} else {
+				<span>Hi <b>@User.Identity.Name</b></span>
+				<form method="POST" asp-controller="Home" asp-action="Logout" style="display: inline;">
+					<button type="submit" class="btn btn-xs btn-link">Logout</button>
+				</form>
+			}
 		</div>
 		<h1>TODO - @ViewData["Title"]</h1>
 		<hr />
