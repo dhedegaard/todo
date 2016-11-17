@@ -88,7 +88,7 @@ namespace todo
             if (ModelState.IsValid)
             {
                 var user = _userManager.Users.SingleOrDefault(u => u.UserName.ToLower() == model.Username.ToLower());
-                if (user != null && !await _userManager.CheckPasswordAsync(user, model.Password))
+                if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
                 {
                     ModelState.AddModelError(string.Empty, "Username and password does not match");
                     return View(model);
@@ -106,6 +106,7 @@ namespace todo
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterUser model)
         {
             if (ModelState.IsValid)
@@ -135,8 +136,10 @@ namespace todo
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Logout() {
+        public async Task<IActionResult> Logout()
+        {
             await _signInManager.SignOutAsync();
             return RedirectToAction(nameof(HomeController.Index));
         }
