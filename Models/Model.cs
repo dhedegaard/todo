@@ -17,6 +17,7 @@ namespace todo.Models
         [Required]
         [MinLengthAttribute(10)]
         public string value { get; set; }
+        public ApplicationUser user { get; set; }
     }
 
     public class ApplicationUser : IdentityUser
