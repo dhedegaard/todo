@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -25,38 +23,56 @@ namespace todo
             _signInManager = signInManager;
             _context = context;
         }
+
+        private IQueryable<Todo> getTodosForUser()
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                var userid = _userManager.GetUserId(User);
+                return _context.Todos.Where(e => e.user.Id == userid);
+            }
+            return _context.Todos.Where(e => e.user.Id == null);
+        }
+
+        [HttpGet]
         public IActionResult Index()
         {
             return View(new IndexViewModel
             {
-                ExistingTodos = _context.Todos.ToList(),
+                ExistingTodos = getTodosForUser().ToList(),
             });
         }
 
         [HttpPost]
         [ValidateAntiForgeryTokenAttribute]
-        public IActionResult Index(IndexViewModel model)
+        public async Task<IActionResult> Index(IndexViewModel model)
         {
-            var loggedIn = _signInManager.IsSignedIn(User);
+            model.ExistingTodos = getTodosForUser().ToList();
             if (ModelState.IsValid)
             {
-                if (_context.Todos.FirstOrDefault(e => e.value == model.NewTodo) != null)
+                string userid = null;
+                if (_signInManager.IsSignedIn(User))
+                {
+                    userid = _userManager.GetUserId(User);
+                }
+                if (_context.Todos.FirstOrDefault(
+                    e => e.value == model.NewTodo && e.user.Id == userid) != null)
                 {
                     ModelState.AddModelError(nameof(model.NewTodo), "An existing todo element has the same name.");
+                    return View(model);
                 }
-            }
-            if (ModelState.IsValid)
-            {
+                ApplicationUser user = null;
+                if (userid != null)
+                {
+                    user = await _userManager.GetUserAsync(User);
+                }
                 _context.Todos.Add(new Todo
                 {
                     value = model.NewTodo,
+                    user = user,
                 });
                 _context.SaveChanges();
                 return RedirectToAction(nameof(HomeController.Index));
-            }
-            if (model.ExistingTodos == null)
-            {
-                model.ExistingTodos = _context.Todos.ToList();
             }
             return View(model);
         }
@@ -83,6 +99,7 @@ namespace todo
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginUser model)
         {
             if (ModelState.IsValid)

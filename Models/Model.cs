@@ -16,8 +16,8 @@ namespace todo.Models
         public int ID { get; set; }
         [Required]
         [MinLengthAttribute(10)]
-        public string value { get; set; }
-        public ApplicationUser user { get; set; }
+        public string value {get; set; }
+        public virtual ApplicationUser user { get; set; }
     }
 
     public class ApplicationUser : IdentityUser
