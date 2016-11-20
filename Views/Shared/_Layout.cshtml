@@ -14,11 +14,11 @@
 	<div class="container">
 		<div class="pull-right">
 			@if (!User.Identity.IsAuthenticated) {
-				<a asp-controller="Home" asp-action="Register">Register</a>
-				<a asp-controller="Home" asp-action="Login">Login</a>
+				<a asp-controller="Auth" asp-action="Register">Register</a>
+				<a asp-controller="Auth" asp-action="Login">Login</a>
 			} else {
 				<span>Hi <b>@User.Identity.Name</b></span>
-				<form method="POST" asp-controller="Home" asp-action="Logout" style="display: inline;">
+				<form method="POST" asp-controller="Auth" asp-action="Logout" style="display: inline;">
 					<button type="submit" class="btn btn-xs btn-link">Logout</button>
 				</form>
 			}
