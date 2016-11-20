@@ -26,12 +26,14 @@ namespace todo
 
         private IQueryable<Todo> getTodosForUser()
         {
+            IQueryable<Todo> result;
+            string userid = null;
             if (_signInManager.IsSignedIn(User))
             {
-                var userid = _userManager.GetUserId(User);
-                return _context.Todos.Where(e => e.user.Id == userid);
+                userid = _userManager.GetUserId(User);
+
             }
-            return _context.Todos.Where(e => e.user.Id == null);
+            return _context.Todos.Where(e => e.user.Id == userid).OrderBy(e => e.value);
         }
 
         [HttpGet]
