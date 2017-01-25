@@ -28,7 +28,7 @@ namespace todo
             string userid = _signInManager.IsSignedIn(User) ? _userManager.GetUserId(User) : null;
             return _context.Todos
                            .Where(e => e.user.Id == userid)
-                           .OrderBy(e => e.value);
+                           .OrderByDescending(e => e.ID);
         }
 
         [HttpGet]
