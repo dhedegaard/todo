@@ -1,0 +1,9 @@
+version: "2"
+
+services:
+  webapp:
+    build: .
+    ports:
+      - "127.0.0.1:34342:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
