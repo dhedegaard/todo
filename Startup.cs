@@ -22,9 +22,21 @@ namespace todo
         {
             services.AddMvc();
 
-            services.AddEntityFramework()
-                .AddEntityFrameworkSqlite()
-                .AddDbContext<ModelContext>(options => options.UseSqlite("Filename=database.sqlite"));
+            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("POSTGRES_CONN_STRING")))
+            {
+                /* If there's a postgres connection string, use it. */
+                services.AddEntityFramework()
+                    .AddEntityFrameworkNpgsql()
+                    .AddDbContext<ModelContext>(options => options.UseNpgsql(
+                        Environment.GetEnvironmentVariable("POSTGRES_CONN_STRING")));
+            }
+            else
+            {
+                /* Fallback to sqlite, for local development. */
+                services.AddEntityFramework()
+                    .AddEntityFrameworkSqlite()
+                    .AddDbContext<ModelContext>(options => options.UseSqlite("Filename=database.sqlite"));
+            }
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ModelContext>()

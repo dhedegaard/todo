@@ -7,3 +7,14 @@ services:
       - "127.0.0.1:34342:5000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
+      - POSTGRES_CONN_STRING=Server=postgres;Database=todo;User Id=todo;Password=secret123
+    links:
+      - postgres
+    command: sh -c "sleep 5 && dotnet ef database update && dotnet run --server.urls http://*:5000"
+
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=secret123
+      - POSTGRES_USER=todo
+      - POSTGRES_DB=todo
