@@ -8,7 +8,7 @@ using todo.Models;
 namespace todo.Migrations
 {
     [DbContext(typeof(ModelContext))]
-    [Migration("20161119000940_initial")]
+    [Migration("20170126204827_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
