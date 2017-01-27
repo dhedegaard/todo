@@ -4,8 +4,8 @@
 }
 @model todo.ViewModels.RegisterUser
 
-<form method="POST" asp-controller="Auth" asp-action="Register" class="form-horizontal">
-    <div class="form-group">
+<form method="POST" asp-controller="Auth" asp-action="Register">
+    <div class="form-group row">
         <div class="col-sm-2">
             <label asp-for="Username"></label>
         </div>
@@ -14,7 +14,7 @@
         </div>
         <span asp-validation-for="Username" class="col-sm-4 text-danger"></span>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-sm-2">
             <label asp-for="Password"></label>
         </div>
@@ -23,7 +23,7 @@
         </div>
         <span asp-validation-for="Password" class="col-sm-4 text-danger"></span>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-sm-2">
             <label asp-for="Password2"></label>
         </div>
@@ -32,9 +32,10 @@
         </div>
         <span asp-validation-for="Password2" class="col-sm-4 text-danger"></span>
     </div>
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="form-row">
-        <div class="col-sm-offset-2 col-sm-4">
+    <div asp-validation-summary="ModelOnly" class="row offset-sm-2 text-danger"></div>
+    <br />
+    <div class="form-row row">
+        <div class="offset-sm-2 col-sm-4">
             <input type="submit" value="Register" class="btn btn-primary" />
         </div>
     </div>

@@ -12,14 +12,17 @@
 
 <body>
 	<div class="container">
-		<div class="pull-right">
+		<div class="float-right">
 			@if (!User.Identity.IsAuthenticated) {
 				<a asp-controller="Auth" asp-action="Register">Register</a>
 				<a asp-controller="Auth" asp-action="Login">Login</a>
 			} else {
 				<span>Hi <b>@User.Identity.Name</b></span>
 				<form method="POST" asp-controller="Auth" asp-action="Logout" style="display: inline;">
-					<button type="submit" class="btn btn-xs btn-link">Logout</button>
+					<button type="submit" class="btn btn-xs btn-link">
+						<i class="fa fa-sign-out"></i>
+						Logout
+					</button>
 				</form>
 			}
 		</div>
@@ -27,8 +30,8 @@
 		<hr />
 		@RenderBody()
 	</div>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-		crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 </body>
 
 </html>

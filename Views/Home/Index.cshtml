@@ -8,18 +8,20 @@
 	<label asp-for="NewTodo">
 		<input asp-for="NewTodo" class="form-control" autofocus />
 	</label>
-	<input type="submit" value="Add note" class="btn btn-primary" /><br />
-	<span asp-validation-for="NewTodo" class="text-danger"></span>
+	<input type="submit" value="Add note" class="btn btn-primary" />
+	<div>
+		<span asp-validation-for="NewTodo" class="text-danger"></span>
+	</div>
 </form>
 
 <hr />
 
 @foreach (var todo in Model.ExistingTodos) {
 	<div class="alert alert-info">
-		<div class="pull-right">
+		<div class="float-right">
 			<form method="POST" asp-controller="Home" asp-action="RemoveNote" asp-route-id="@todo.ID" class="form form-inline">
 				<button type="submit" class="btn btn-sm btn-danger">
-					<i class="glyphicon glyphicon-trash"></i>
+					<i class="fa fa-trash"></i>
 				</button>
 			</form>
 		</div>
