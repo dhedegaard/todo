@@ -5,7 +5,7 @@ core, MVC and EntityFramework Core.
 
 ## For running the application:
 
-Requires .net core 1.0.
+Requires .net core 2.0.
 
 Do the dance:
 

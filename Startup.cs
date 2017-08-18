@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -25,17 +27,13 @@ namespace todo
             if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("POSTGRES_CONN_STRING")))
             {
                 /* If there's a postgres connection string, use it. */
-                services.AddEntityFramework()
-                    .AddEntityFrameworkNpgsql()
-                    .AddDbContext<ModelContext>(options => options.UseNpgsql(
+                services.AddDbContext<ModelContext>(options => options.UseNpgsql(
                         Environment.GetEnvironmentVariable("POSTGRES_CONN_STRING")));
             }
             else
             {
                 /* Fallback to sqlite, for local development. */
-                services.AddEntityFramework()
-                    .AddEntityFrameworkSqlite()
-                    .AddDbContext<ModelContext>(options => options.UseSqlite("Filename=database.sqlite"));
+                services.AddDbContext<ModelContext>(options => options.UseSqlite("Filename=database.sqlite"));
             }
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -50,11 +48,6 @@ namespace todo
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 1;
             });
-
-            services.Configure<AuthenticationOptions>(options =>
-            {
-                options.AutomaticChallenge = false;
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,7 +61,7 @@ namespace todo
             }
 
             app.UseStaticFiles();
-            app.UseIdentity();
+            app.UseAuthentication();
             app.UseMvcWithDefaultRoute();
         }
     }
