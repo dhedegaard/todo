@@ -4,6 +4,9 @@ pipelines:
   default:
     - step:
         script:
-          - dotnet restore
-          - dotnet build
+          # Run the unit tests.
+          - cd todo.test
+          - dotnet test
+          # Check to see if we can apply migrations.
+          - cd ../todo
           - dotnet ef database update

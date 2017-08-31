@@ -235,4 +235,4 @@ _Pvt_Extensions
 
 .vscode
 
-*.sqlite
+**/*.sqlite
