@@ -14,7 +14,7 @@ namespace todo.tests
         private readonly AuthController _controller = new AuthController(null, null, null);
 
         [Fact]
-        public async void Login_Get()
+        public void Login_Get()
         {
             var result = _controller.Login();
 
@@ -23,7 +23,7 @@ namespace todo.tests
         }
 
         [Fact]
-        public async void Register_Get()
+        public void Register_Get()
         {
             var result = _controller.Register();
 
