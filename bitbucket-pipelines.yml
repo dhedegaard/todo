@@ -5,7 +5,7 @@ pipelines:
     - step:
         script:
           # Run the unit tests.
-          - cd todo.test
+          - cd todo.tests
           - dotnet test
           # Check to see if we can apply migrations.
           - cd ../todo
