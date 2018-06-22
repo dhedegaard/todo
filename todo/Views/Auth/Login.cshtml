@@ -1,4 +1,8 @@
-@{ Layout = "_Layout"; ViewData["Title"] = "Index"; } @model todo.ViewModels.LoginUser
+@model todo.ViewModels.LoginUser
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Index";
+}
 
 <form method="POST" asp-controller="Auth" asp-action="Login" class="form-horizontal">
 	<div class="form-group row">
