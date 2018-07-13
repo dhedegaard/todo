@@ -1,9 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace todo.ViewModels
-{
-    public class RegisterUser
-    {
+namespace todo.ViewModels {
+    public class RegisterUser {
         [Required]
         [Display(Name = "Username")]
         public string Username { get; set; }

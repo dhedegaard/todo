@@ -7,15 +7,12 @@ using Microsoft.AspNetCore.TestHost;
 using todo.ViewModels;
 using Xunit;
 
-namespace todo.tests
-{
-    public class AuthControllerTest
-    {
+namespace todo.tests {
+    public class AuthControllerTest {
         private readonly AuthController _controller = new AuthController(null, null, null);
 
         [Fact]
-        public void Login_Get()
-        {
+        public void Login_Get() {
             var result = _controller.Login();
 
             var viewResult = Assert.IsType<ViewResult>(result);
@@ -23,8 +20,7 @@ namespace todo.tests
         }
 
         [Fact]
-        public void Register_Get()
-        {
+        public void Register_Get() {
             var result = _controller.Register();
 
             var viewResult = Assert.IsType<ViewResult>(result);

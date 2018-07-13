@@ -5,10 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using todo.Models;
 using todo.ViewModels;
 
-namespace todo
-{
-    public class HomeController : Controller
-    {
+namespace todo {
+    public class HomeController : Controller {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ModelContext _context;
@@ -16,15 +14,13 @@ namespace todo
         public HomeController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ModelContext context)
-        {
+            ModelContext context) {
             _userManager = userManager;
             _signInManager = signInManager;
             _context = context;
         }
 
-        private IQueryable<Todo> getTodosForUser()
-        {
+        private IQueryable<Todo> getTodosForUser() {
             string userid = _signInManager.IsSignedIn(User) ? _userManager.GetUserId(User) : null;
             return _context.Todos
                            .Where(e => e.user.Id == userid)
@@ -32,40 +28,32 @@ namespace todo
         }
 
         [HttpGet]
-        public IActionResult Index()
-        {
-            return View(new IndexViewModel
-            {
+        public IActionResult Index() {
+            return View(new IndexViewModel {
                 ExistingTodos = getTodosForUser().ToList(),
             });
         }
 
         [HttpPost]
         [ValidateAntiForgeryTokenAttribute]
-        public async Task<IActionResult> Index(IndexViewModel model)
-        {
+        public async Task<IActionResult> Index(IndexViewModel model) {
             model.ExistingTodos = getTodosForUser().ToList();
-            if (ModelState.IsValid)
-            {
+            if (ModelState.IsValid) {
                 string userid = null;
-                if (_signInManager.IsSignedIn(User))
-                {
+                if (_signInManager.IsSignedIn(User)) {
                     userid = _userManager.GetUserId(User);
                 }
                 if (_context.Todos.FirstOrDefault(
-                    e => e.value == model.NewTodo && e.user.Id == userid) != null)
-                {
+                    e => e.Value == model.NewTodo && e.user.Id == userid) != null) {
                     ModelState.AddModelError(nameof(model.NewTodo), "An existing todo element has the same name.");
                     return View(model);
                 }
                 ApplicationUser user = null;
-                if (userid != null)
-                {
+                if (userid != null) {
                     user = await _userManager.GetUserAsync(User);
                 }
-                _context.Todos.Add(new Todo
-                {
-                    value = model.NewTodo,
+                _context.Todos.Add(new Todo {
+                    Value = model.NewTodo,
                     user = user,
                 });
                 _context.SaveChanges();
@@ -75,12 +63,10 @@ namespace todo
         }
 
         [HttpPost]
-        public IActionResult RemoveNote([FromRoute] int id)
-        {
+        public IActionResult RemoveNote([FromRoute] int id) {
             var todo = _context.Todos
                 .FirstOrDefault(e => e.ID == id);
-            if (todo == null)
-            {
+            if (todo == null) {
                 // Already deleted or never existed.
                 return NotFound();
             }

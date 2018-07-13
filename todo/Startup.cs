@@ -2,39 +2,30 @@ using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using todo.Models;
 
-namespace todo
-{
-    public class Startup
-    {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection services)
-        {
+namespace todo {
+    public class Startup {
+        private readonly IConfiguration configuration;
+
+        public Startup(IConfiguration configuration) =>
+            this.configuration = configuration;
+
+        public void ConfigureServices(IServiceCollection services) {
             services.AddMvc();
 
-            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("POSTGRES_CONN_STRING")))
-            {
-                /* If there's a postgres connection string, use it. */
-                services.AddDbContext<ModelContext>(options => options.UseNpgsql(
-                        Environment.GetEnvironmentVariable("POSTGRES_CONN_STRING")));
-            }
-            else
-            {
-                /* Fallback to sqlite, for local development. */
-                services.AddDbContext<ModelContext>(options => options.UseSqlite("Filename=database.sqlite"));
-            }
+            services.AddDbContext<ModelContext>(options => options.UseNpgsql(configuration.GetConnectionString("Postgres")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ModelContext>()
                 .AddDefaultTokenProviders();
 
-            services.Configure<IdentityOptions>(options =>
-            {
+            services.Configure<IdentityOptions>(options => {
                 options.Password.RequireDigit = false;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireLowercase = false;
@@ -44,12 +35,10 @@ namespace todo
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
-        {
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory) {
             loggerFactory.AddConsole();
 
-            if (env.IsDevelopment())
-            {
+            if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
             }
 
