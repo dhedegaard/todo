@@ -12,4 +12,4 @@ RUN ["dotnet", "publish", "-c", "Release"]
 
 EXPOSE 5000/tcp
 
-CMD ["dotnet", "run", "bin/Release/netcoreapp2.1/todo.dll", "--server.urls", "http://*:5000"]
+CMD ["dotnet", "run", "bin/Release/netcoreapp2.1/todo.dll", "-c", "Release"]
