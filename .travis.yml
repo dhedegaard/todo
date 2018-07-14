@@ -7,7 +7,7 @@ services:
   - postgresql
 
 before_script:
-  - psql -c "create user todo with password 'todo123' superuser;"" -U postgres
+  - psql -c "create user todo with password 'todo123' superuser;" -U postgres
   - psql -c "create database todo with owner todo;" -U postgres
 
 script:
