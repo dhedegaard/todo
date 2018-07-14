@@ -17,3 +17,5 @@ script:
   # Check to see if we can apply migrations.
   - cd ../todo
   - dotnet ef database update
+  # And finally, publish a release build.
+  - dotnet publish -c Release
