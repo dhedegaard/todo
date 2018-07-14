@@ -6,17 +6,18 @@ services:
     ports:
       - "127.0.0.1:34342:5000"
     environment:
+      - CONNECTION_STRING=Docker
       - ASPNETCORE_ENVIRONMENT=Production
-      - POSTGRES_CONN_STRING=Server=postgres;Database=todo;User Id=todo;Password=secret123
+      - ASPNETCORE_URLS=http://0.0.0.0:5000
     links:
       - postgres
     command: sh -c "sleep 5 && dotnet ef database update && dotnet run --server.urls http://0.0.0.0:5000"
-    restart: always
+    restart: unless-stopped
 
   postgres:
     image: postgres
     environment:
-      - POSTGRES_PASSWORD=secret123
+      - POSTGRES_PASSWORD=todo123
       - POSTGRES_USER=todo
       - POSTGRES_DB=todo
-    restart: always
+    restart: unless-stopped

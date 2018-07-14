@@ -19,7 +19,9 @@ namespace todo {
         public void ConfigureServices(IServiceCollection services) {
             services.AddMvc();
 
-            services.AddDbContext<ModelContext>(options => options.UseNpgsql(configuration.GetConnectionString("Postgres")));
+            services.AddDbContext<ModelContext>(options =>
+                options.UseNpgsql(configuration.GetConnectionString(
+                    Environment.GetEnvironmentVariable("CONNECTION_STRING") ?? "Postgres")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ModelContext>()
